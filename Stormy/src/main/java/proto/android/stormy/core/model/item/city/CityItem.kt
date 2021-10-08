@@ -1,7 +1,6 @@
 package proto.android.stormy.core.model.item.city
 
 import android.util.DisplayMetrics
-import android.util.Log
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey

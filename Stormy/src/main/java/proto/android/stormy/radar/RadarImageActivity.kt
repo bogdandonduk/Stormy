@@ -1,12 +1,16 @@
 package proto.android.stormy.radar
 
 import android.os.Bundle
-import android.util.Log
+import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import bogdandonduk.appbartoolboxandroidlib.appbar.AppBar
+import bogdandonduk.appbartoolboxandroidlib.appbar.AppBarHandler
+import bogdandonduk.appbartoolboxandroidlib.appbar.AppBarToolbox
+import bogdandonduk.appbartoolboxandroidlib.drawer.AppBarDrawerToggle
 import bogdandonduk.commontoolboxlib.CommonToolbox
+import bogdandonduk.tooltiptoolboxlib.TooltipToolbox
 import com.bumptech.glide.Glide
 import com.r0adkll.slidr.Slidr
 import kotlinx.coroutines.Dispatchers.IO
@@ -14,36 +18,59 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import proto.android.stormy.R
-import proto.android.stormy.Stormy
 import proto.android.stormy.core.base.BaseActivity
+import proto.android.stormy.core.extensions.configureGoBackTooltip
 import proto.android.stormy.core.model.CityRepo
 import proto.android.stormy.databinding.ActivityRadarImageBinding
-import proto.android.stormy.home.DailyForecastAdapter
 
-class RadarImageActivity : BaseActivity<ActivityRadarImageBinding, ActivityRadarImageViewModel>(
+class RadarImageActivity : BaseActivity<ActivityRadarImageBinding, RadarImageActivityViewModel>(
     {
         ActivityRadarImageBinding.inflate(it)
     },
     {
-        ActivityRadarImageViewModel(it.application)
+        RadarImageActivityViewModel(it.application)
     }
-) {
+), AppBarHandler {
+    override var appBar: AppBar? = null
+    override var appBarDrawerToggle: AppBarDrawerToggle? = null
+    override var homeAsUpIndicatorView: View? = null
+    override var showOptionsMenu = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        CommonToolbox.launchStickyImmersiveMode(window)
+        getInitializedAppBar(this, viewBinding.activityRadarImageToolbar)
+            .modifyAsActionBar {
+                it.setDisplayShowTitleEnabled(false)
+                it.setDisplayHomeAsUpEnabled(true)
+                it.setHomeAsUpIndicator(R.drawable.ic_back_arrow)
+            }
+            .modifyAsToolbar {
+                it.setTitleTextColor(ResourcesCompat.getColor(resources, R.color.dark, null))
+            }
 
         slidrInterface = Slidr.attach(this)
+
+        AppBarToolbox.getHomeAsUpIndicatorAsView(viewBinding.activityRadarImageToolbar)?.run {
+            setOnLongClickListener {
+                CommonToolbox.vibrateOneShot(this@RadarImageActivity)
+
+                TooltipToolbox.configureGoBackTooltip(this@RadarImageActivity, getInitializedViewModel(this@RadarImageActivity, viewModelStore).goBackTooltipBuilder).show(this@RadarImageActivity, it)
+
+                true
+            }
+
+            homeAsUpIndicatorView = this
+        }
 
         loadContent()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == android.R.id.home)
+            onBackPressed()
 
-        CommonToolbox.launchStickyImmersiveMode(window)
-
-        loadContent()
+        return false
     }
 
     override fun loadContent(forceShowIndicators: Boolean) {
@@ -59,6 +86,13 @@ class RadarImageActivity : BaseActivity<ActivityRadarImageBinding, ActivityRadar
                         viewBinding.activityRadarImageLoadingProgressBarContainerConstraintLayout.visibility = View.GONE
 
                     if(this != null) {
+                        getInitializedAppBar(this@RadarImageActivity, viewBinding.activityRadarImageToolbar)
+                            .modifyAsActionBar {
+                                it.setDisplayShowTitleEnabled(true)
+
+                                it.title = "$name, $countryCode"
+                            }
+
                         viewModelScope.launch(IO) {
                             fetchInitializeRadarImageData().run imageData@ {
                                 if(this != null) {
@@ -76,14 +110,20 @@ class RadarImageActivity : BaseActivity<ActivityRadarImageBinding, ActivityRadar
                                     }
                             }
                         }
-                    } else {
+                    } else
                         viewBinding.activityRadarImageNoImageHintTextView.visibility = View.VISIBLE
-
-                        if(isFromServer)
-                            Toast.makeText(this@RadarImageActivity, R.string.something_went_wrong_maybe_internet_connection_lost, Toast.LENGTH_SHORT).show()
-                    }
                 }
             }
         }
+    }
+
+    override fun continueTooltips(vararg excludedKeys: String) {
+        homeAsUpIndicatorView?.run {
+            TooltipToolbox.configureGoBackTooltip(this@RadarImageActivity, getInitializedViewModel(this@RadarImageActivity, viewModelStore).goBackTooltipBuilder).`continue`(this@RadarImageActivity, this)
+        }
+    }
+
+    override fun dismissTooltips(vararg excludedKeys: String) {
+        TooltipToolbox.dismissTooltip(getInitializedViewModel(this, viewModelStore).goBackTooltipBuilder.getKey())
     }
 }

@@ -1,8 +1,8 @@
 package proto.android.stormy.core.model.cache.city
 
 import androidx.room.*
-import proto.android.stormy.core.model.item.city.CityItem
 import proto.android.stormy.core.model.cache.CacheDao
+import proto.android.stormy.core.model.item.city.CityItem
 
 @Dao
 interface CityDao : CacheDao<CityItem> {

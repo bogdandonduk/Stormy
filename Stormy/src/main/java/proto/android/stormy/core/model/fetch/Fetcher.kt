@@ -2,7 +2,7 @@ package proto.android.stormy.core.model.fetch
 
 import proto.android.stormy.core.model.item.CoreItem
 
-interface Fetcher<ItemType : CoreItem> {
+interface Fetcher<ItemType : CoreItem > {
     var reattemptStrategy: RequestReattemptStrategy
 
     suspend fun fetchSpecific(intrinsicId: Long) : ItemType?

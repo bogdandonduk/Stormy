@@ -1,6 +1,6 @@
 package proto.android.stormy.home
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import bogdandonduk.appbartoolboxandroidlib.appbar.AppBar
 import bogdandonduk.appbartoolboxandroidlib.appbar.AppBarHandler
+import bogdandonduk.appbartoolboxandroidlib.appbar.AppBarToolbox
 import bogdandonduk.appbartoolboxandroidlib.drawer.AppBarDrawerToggle
 import bogdandonduk.commontoolboxlib.CommonToolbox
+import bogdandonduk.tooltiptoolboxlib.TooltipToolbox
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -22,6 +24,7 @@ import proto.android.stormy.R
 import proto.android.stormy.Stormy
 import proto.android.stormy.citypicker.CityPickerActivity
 import proto.android.stormy.core.base.BaseActivity
+import proto.android.stormy.core.extensions.configureTooltipBuilder
 import proto.android.stormy.core.extensions.getDayOfWeekIndex
 import proto.android.stormy.core.model.CityRepo
 import proto.android.stormy.databinding.ActivityHomeBinding
@@ -34,6 +37,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
     override var appBarDrawerToggle: AppBarDrawerToggle? = null
     override var homeAsUpIndicatorView: View? = null
     override var showOptionsMenu: Boolean = true
+
+    var radarOptionsMenuItemId = "radar"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,29 +61,62 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                 }
             })
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
+        AppBarToolbox.getHomeAsUpIndicatorAsView(viewBinding.activityHomeToolbar)?.run {
+            setOnLongClickListener {
+                CommonToolbox.vibrateOneShot(this@HomeActivity)
 
-        loadContent()
+                configureSearchTooltip(this@HomeActivity).show(this@HomeActivity, it)
+
+                true
+            }
+
+            homeAsUpIndicatorView = this
+        }
+
+        viewBinding.activityHomeRefreshFloatingActionButton
+            .setOnLongClickListener {
+                CommonToolbox.vibrateOneShot(this@HomeActivity)
+
+                configureUpdateImageTooltip(this@HomeActivity).show(this@HomeActivity, it)
+
+                true
+            };
+
+        {
+            AppBarToolbox.getOptionsMenuItemAsView(radarOptionsMenuItemId, viewBinding.activityHomeToolbar)?.setOnLongClickListener {
+                CommonToolbox.vibrateOneShot(this@HomeActivity)
+
+                configureRadarImageTooltip(this@HomeActivity).show(this@HomeActivity, it)
+
+                true
+            }
+        }.run {
+            viewBinding.activityHomeToolbar.post {
+                invoke()
+            }
+
+            viewBinding.root.viewTreeObserver.addOnGlobalLayoutListener {
+                invoke()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_app_bar_activity_home, menu)
 
         menu?.findItem(R.id.menu_app_bar_activity_home_radar_image_menu_item)?.setOnMenuItemClickListener {
-            startActivity(Intent(this, RadarImageActivity::class.java))
+            CommonToolbox.openActivity(this, RadarImageActivity::class.java)
 
             false
         }
 
-        return true
+        return showOptionsMenu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == android.R.id.home)
-            startActivity(Intent(this, CityPickerActivity::class.java))
+            CommonToolbox.openActivity(this, CityPickerActivity::class.java)
 
         return false
     }
@@ -146,4 +184,49 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
             viewBinding.activityHomeHourlyForecastRecyclerView.layoutManager?.onRestoreInstanceState(getInitializedViewModel(this@HomeActivity, viewModelStore).hourlyForecastListState)
         }
     }
+
+    override fun continueTooltips(vararg excludedKeys: String) {
+        homeAsUpIndicatorView?.run {
+            configureSearchTooltip(this@HomeActivity).`continue`(this@HomeActivity, this)
+        }
+
+        AppBarToolbox.getOptionsMenuItemAsView(radarOptionsMenuItemId, viewBinding.activityHomeToolbar)?.run {
+            configureRadarImageTooltip(this@HomeActivity).`continue`(this@HomeActivity, this)
+        }
+
+        configureUpdateImageTooltip(this).`continue`(this, viewBinding.activityHomeRefreshFloatingActionButton)
+    }
+
+    override fun dismissTooltips(vararg excludedKeys: String) {
+        TooltipToolbox.dismissTooltip(getInitializedViewModel(this, viewModelStore).searchTooltipBuilder.getKey())
+        TooltipToolbox.dismissTooltip(getInitializedViewModel(this, viewModelStore).radarImageTooltipBuilder.getKey())
+        TooltipToolbox.dismissTooltip(getInitializedViewModel(this, viewModelStore).updateTooltipBuilder.getKey())
+    }
+
+    fun configureSearchTooltip(context: Context) =
+        TooltipToolbox.configureTooltipBuilder(context, getInitializedViewModel(this, viewModelStore).searchTooltipBuilder)
+            .setText {
+                getString(R.string.search_city)
+            }
+            .setOnClickAction { _, _ ->
+                CommonToolbox.openActivity(this, CityPickerActivity::class.java)
+            }
+
+    fun configureRadarImageTooltip(context: Context) =
+        TooltipToolbox.configureTooltipBuilder(context, getInitializedViewModel(this, viewModelStore).radarImageTooltipBuilder)
+            .setText {
+                getString(R.string.city_radar_image)
+            }
+            .setOnClickAction { _, _ ->
+                CommonToolbox.openActivity(this, RadarImageActivity::class.java)
+            }
+
+    fun configureUpdateImageTooltip(context: Context) =
+        TooltipToolbox.configureTooltipBuilder(context, getInitializedViewModel(this, viewModelStore).updateTooltipBuilder)
+            .setText {
+                getString(R.string.update)
+            }
+            .setOnClickAction { _, _ ->
+                viewBinding.activityHomeRefreshFloatingActionButton.performClick()
+            }
 }

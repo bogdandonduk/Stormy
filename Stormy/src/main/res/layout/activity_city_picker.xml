@@ -19,8 +19,9 @@
             android:layout_marginTop="130dp"
             android:backgroundTint="@color/dark"
             android:ellipsize="start"
-            android:hint="@string/search_by_city_name"
-            android:inputType="textPersonName"
+            android:hint="@string/search_city_by_name"
+            android:imeOptions="flagNoExtractUi|actionSearch"
+            android:inputType="text"
             android:padding="15dp"
             android:singleLine="true"
             android:textColor="@color/dark"
@@ -34,6 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="230dp"
             android:layout_marginTop="4dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="@+id/activity_city_picker_search_edit_text"
             app:layout_constraintStart_toStartOf="@+id/activity_city_picker_search_edit_text"
             app:layout_constraintTop_toBottomOf="@+id/activity_city_picker_search_edit_text" />
@@ -58,6 +60,32 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_close" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/activity_city_picker_fetching_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:indeterminateTint="@color/dark"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/activity_city_picker_search_edit_text"
+            app:layout_constraintStart_toStartOf="@+id/activity_city_picker_search_edit_text"
+            app:layout_constraintTop_toBottomOf="@+id/activity_city_picker_search_edit_text"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/activity_city_picker_result_hint_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:textColor="@color/dark"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/activity_city_picker_search_result_list_recycler_view"
+            app:layout_constraintStart_toStartOf="@+id/activity_city_picker_search_result_list_recycler_view"
+            app:layout_constraintTop_toTopOf="@+id/activity_city_picker_fetching_progress_bar"
+            tools:text="@string/no_cities_found"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

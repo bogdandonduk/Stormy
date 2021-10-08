@@ -66,16 +66,6 @@ class DailyForecastAdapter(var dayItems: List<Day>, var hostActivity: HomeActivi
             viewBinding.layoutDailyForecastTemperatureTextView.setTextColor(color)
 
             viewBinding.layoutDailyForecastWeatherTypeIconImageView.setImageResource(CommonToolbox.getIconResIdForWeatherType(dayItem.weatherType, selected))
-
-//            ResourcesCompat.getDrawable(hostActivity.resources, CommonToolbox.getIconResIdForWeatherType(dayItem.weatherType), null).run {
-//                if(this != null) {
-//                    CommonToolbox.applyColorFilter(this, color)
-//
-//                    viewBinding.layoutDailyForecastWeatherTypeIconImageView.setImageDrawable(this)
-//                } else {
-//                    viewBinding.layoutDailyForecastWeatherTypeIconImageView.setImageDrawable(ResourcesCompat.getDrawable(hostActivity.resources, CommonToolbox.getIconResIdForWeatherType(dayItem.weatherType), null))
-//                }
-//            }
         }
     }
 

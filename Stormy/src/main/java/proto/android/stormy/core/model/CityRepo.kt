@@ -1,8 +1,6 @@
 package proto.android.stormy.core.model
 
 import android.content.Context
-import android.util.Log
-import proto.android.stormy.core.extensions.TAG
 import proto.android.stormy.core.model.cache.CacheDao
 import proto.android.stormy.core.model.fetch.Fetcher
 import proto.android.stormy.core.model.item.CoreItem

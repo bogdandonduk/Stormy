@@ -1,14 +1,13 @@
 package proto.android.stormy.core.model
 
 import android.content.Context
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import proto.android.stormy.core.model.item.CoreItem
 
 interface RepoHandler<ItemType : CoreItem> {
     var coroutineScope: CoroutineScope
+    var searchJob: Job?
     
     var cityRepo: CityRepo<ItemType>
     
@@ -17,7 +16,7 @@ interface RepoHandler<ItemType : CoreItem> {
     fun isLastCityIntrinsicIdChanged(context: Context) = cityRepo.preferencesManager.getLastItemId(context) != lastCity?.intrinsicId
 
     fun loadLastCity(context: Context, switchToMainThread: Boolean = true, receiver: (ItemType?, CityRepo.Source) -> Unit) {
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.launch(IO) {
             cityRepo.load(context) { item: ItemType?, source: CityRepo.Source ->
                 lastCity = item
 
@@ -32,7 +31,7 @@ interface RepoHandler<ItemType : CoreItem> {
     }
 
     fun cacheCity(city: ItemType) {
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.launch(IO) {
             cityRepo.cache(city)
         }
     }
@@ -40,4 +39,24 @@ interface RepoHandler<ItemType : CoreItem> {
     fun getLatestTimestamp(context: Context) = cityRepo.preferencesManager.getLatestTimestamp(context)
 
     fun getLastSelectedDayIndex(context: Context) = cityRepo.preferencesManager.getLastSelectedDayIndex(context)
+
+    fun search(query: String, switchToMainThread: Boolean = true, receiver: (List<ItemType>?) -> Unit) {
+        if(searchJob != null && searchJob!!.isActive) {
+            searchJob?.cancel("Previous similar irrelevant job cancelled")
+
+            searchJob = null
+        }
+
+        searchJob = coroutineScope.launch(IO) {
+
+            val items = cityRepo.fetcher.search(query)
+
+            if(switchToMainThread)
+                withContext(Dispatchers.Main) {
+                    receiver(items)
+                }
+            else
+                receiver(items)
+        }
+    }
 }

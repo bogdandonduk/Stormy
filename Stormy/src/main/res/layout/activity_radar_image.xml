@@ -7,6 +7,16 @@
     android:background="@drawable/bg_main"
     tools:context=".radar.RadarImageActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/activity_radar_image_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/activity_radar_image_radar_image_image_view"
         android:layout_width="match_parent"

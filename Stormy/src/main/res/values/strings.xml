@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Stormy</string>
-    <string name="updating_info">Updating info</string>
+    <string name="fetching_info">Fetching info</string>
     <string name="city_image">City image</string>
     <string name="something_went_wrong_maybe_internet_connection_lost">Something went wrong, maybe internet connection lost</string>
     <string name="radar_image">Radar image</string>
@@ -11,8 +11,13 @@
     <string name="rain">Rain?</string>
     <string name="wind">Wind\n(mph)</string>
     <string name="humidity">Humi\ndity</string>
-    <string name="search_by_city_name">Search by city name</string>
+    <string name="search_city">Search city</string>
+    <string name="search_city_by_name">Search city by name</string>
     <string name="close">Close</string>
+    <string name="no_cities_found">No cities found</string>
+    <string name="go_back">Go back</string>
+    <string name="city_radar_image">City radar image</string>
+    <string name="update">Update</string>
 
     <string-array name="week_days">
         <item>Mon</item>

@@ -1,7 +1,6 @@
 package proto.android.stormy.core.model.preferences
 
 import android.content.Context
-import bogdandonduk.commontoolboxlib.CommonToolbox
 
 interface PreferencesManager {
     val KEY_LAST_ITEM_ID: String

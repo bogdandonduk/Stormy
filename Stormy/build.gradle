@@ -66,6 +66,8 @@ dependencies {
     implementation 'com.r0adkll:slidableactivity:2.1.0'
     implementation 'com.github.duanhong169:drawabletoolbox:1.0.7'
 
+    implementation 'com.github.bogdandonduk:TooltipToolbox:2.2.2'
+
     def glide_version = "4.12.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
