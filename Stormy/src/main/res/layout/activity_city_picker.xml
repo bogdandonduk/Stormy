@@ -1,9 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".citypicker.CityPickerActivity">
+    android:background="@color/transparent_strong_light">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="30dp"
+        tools:context=".citypicker.CityPickerActivity">
+
+        <EditText
+            android:id="@+id/activity_city_picker_search_edit_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="130dp"
+            android:backgroundTint="@color/dark"
+            android:ellipsize="start"
+            android:hint="@string/search_by_city_name"
+            android:inputType="textPersonName"
+            android:padding="15dp"
+            android:singleLine="true"
+            android:textColor="@color/dark"
+            android:textColorHint="@color/transparent_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/activity_city_picker_search_result_list_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/activity_city_picker_search_edit_text"
+            app:layout_constraintStart_toStartOf="@+id/activity_city_picker_search_edit_text"
+            app:layout_constraintTop_toBottomOf="@+id/activity_city_picker_search_edit_text" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/activity_city_picker_close_button_constraint_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="40dp"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/activity_city_picker_close_icon_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_close" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

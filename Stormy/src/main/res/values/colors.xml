@@ -4,5 +4,8 @@
     <color name="dark">#657f9d</color>
     <color name="transparent_dark">#88657f9d</color>
     <color name="transparent_feeble_dark">#33657f9d</color>
+    <color name="transparent_strong_dark">#cc657f9d</color>
     <color name="transparent_light">#88fafafa</color>
+    <color name="transparent_strong_light">#ccfafafa</color>
+    <color name="main">#77a3cd</color>
 </resources>

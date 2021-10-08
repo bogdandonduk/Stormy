@@ -7,7 +7,7 @@ interface Fetcher<ItemType : CoreItem> {
 
     suspend fun fetchSpecific(intrinsicId: Long) : ItemType?
 
-    suspend fun fetchAll() : List<ItemType>?
+    suspend fun search(query: String) : List<ItemType>?
 
     enum class RequestReattemptStrategy(var attemptsNumber: Int) {
         UNOBTRUSIVE(attemptsNumber = 1),

@@ -11,6 +11,9 @@
     <string name="rain">Rain?</string>
     <string name="wind">Wind\n(mph)</string>
     <string name="humidity">Humi\ndity</string>
+    <string name="search_by_city_name">Search by city name</string>
+    <string name="close">Close</string>
+
     <string-array name="week_days">
         <item>Mon</item>
         <item>Tue</item>

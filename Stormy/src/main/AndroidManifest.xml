@@ -15,16 +15,14 @@
 
         <activity
             android:name=".radar.RadarImageActivity"
-            android:theme="@style/ThemeSlidr"
-            android:exported="true" />
+            android:theme="@style/ThemeSlidr" />
 
         <activity
             android:name=".citypicker.CityPickerActivity"
-            android:exported="true" />
+            android:theme="@style/ThemeSlidr" />
 
         <activity
-            android:name=".home.HomeActivity"
-            android:exported="true" />
+            android:name=".home.HomeActivity" />
 
         <activity-alias
             android:name=".LauncherActivity"

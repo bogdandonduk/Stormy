@@ -2,7 +2,6 @@ package proto.android.stormy.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -21,7 +20,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import proto.android.stormy.R
 import proto.android.stormy.Stormy
+import proto.android.stormy.citypicker.CityPickerActivity
 import proto.android.stormy.core.base.BaseActivity
+import proto.android.stormy.core.extensions.getDayOfWeekIndex
 import proto.android.stormy.core.model.CityRepo
 import proto.android.stormy.databinding.ActivityHomeBinding
 import proto.android.stormy.radar.RadarImageActivity
@@ -77,7 +78,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == android.R.id.home)
-            Toast.makeText(this, "HOME", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, CityPickerActivity::class.java))
 
         return false
     }
@@ -100,25 +101,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
 
                         viewBinding.activityHomeTimestampTextView.text = CommonToolbox.getDateTime(timestamp / 1000)
 
-                        val date = Date(timestamp)
-
-                        val hour = SimpleDateFormat("h", Locale.getDefault()).format(date)
-
-                        val dayOfWeek =
-                            when(Calendar.getInstance().apply { time = Date(timestamp) }.get(Calendar.DAY_OF_WEEK)) {
-                                Calendar.MONDAY -> 0
-                                Calendar.TUESDAY -> 1
-                                Calendar.WEDNESDAY -> 2
-                                Calendar.THURSDAY -> 3
-                                Calendar.FRIDAY -> 4
-                                Calendar.SATURDAY -> 5
-
-                                else -> 6
-                            }
-
-                        Log.d("TAG", "loadContent: $hour $dayOfWeek")
-
                         getInitializedWeather()?.run {
+                            viewBinding.activityHomeCurrentTemperatureTextView.text = "${days[CommonToolbox.getDayOfWeekIndex(timestamp)].hours[SimpleDateFormat(" HH ", Locale.getDefault()).format(Date(timestamp)).trim().toInt()].temperature}°"
+
                             viewBinding.activityHomeDailyForecastRecyclerView.run {
                                 if(layoutManager == null)
                                     layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)

@@ -35,6 +35,8 @@ class CityFetcher(
                         }
                     else
                         attemptNumber++
+
+                    close()
                 }
             } catch(thr: Throwable) {
                 attemptNumber++
@@ -44,15 +46,30 @@ class CityFetcher(
         return null
     }
 
-    override suspend fun fetchAll(): List<CityItem>? {
-//        var attemptNumber = 1
+    override suspend fun search(query: String): List<CityItem>? {
+//        do {
+//            try {
+//                okHttpClient.newCall(Request.Builder().url("https://weather.exam.bottlerocketservices.com/cities/$intrinsicId").build()).execute().run {
+//                    if(isSuccessful)
+//                        body?.charStream()?.readText()?.run {
+//                            val cityJsonObject = JSONObject(this).getJSONObject("city")
 //
-//        okHttpClient.newCall(Request.Builder().url("https://weather.exam.bottlerocketservices.com/cities").build()).execute().run {
-//            if(isSuccessful)
-//                body?.charStream()?.readText()?.run {
+//                            return CityItem(
+//                                intrinsicId = cityJsonObject.getLong("geonameid"),
+//                                name = cityJsonObject.getString("name"),
+//                                countryCode = cityJsonObject.getString("country code"),
+//                                rawDataText = toString()
+//                            )
+//                        }
+//                    else
+//                        attemptNumber++
 //
+//                    close()
 //                }
-//        }
+//            } catch(thr: Throwable) {
+//                attemptNumber++
+//            }
+//        } while(attemptNumber <= reattemptStrategy.attemptsNumber)
 
         return null
     }

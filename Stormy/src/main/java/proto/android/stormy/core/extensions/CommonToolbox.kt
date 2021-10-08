@@ -2,6 +2,7 @@ package proto.android.stormy.core.extensions
 
 import bogdandonduk.commontoolboxlib.CommonToolbox
 import proto.android.stormy.R
+import java.util.*
 
 fun CommonToolbox.getIconResIdForWeatherType(weatherType: String, selected: Boolean) =
     when(weatherType) {
@@ -43,4 +44,16 @@ fun CommonToolbox.getConvertedHour(rawHour: Int) =
         23 -> "11 PM"
 
         else -> throw IllegalArgumentException("Invalid raw hour given, should be in range from 0 to 23")
+    }
+
+fun CommonToolbox.getDayOfWeekIndex(timeMillis: Long) =
+    when(Calendar.getInstance().apply { time = Date(timeMillis) }.get(Calendar.DAY_OF_WEEK)) {
+        Calendar.MONDAY -> 0
+        Calendar.TUESDAY -> 1
+        Calendar.WEDNESDAY -> 2
+        Calendar.THURSDAY -> 3
+        Calendar.FRIDAY -> 4
+        Calendar.SATURDAY -> 5
+
+        else -> 6
     }

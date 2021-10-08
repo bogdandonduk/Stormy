@@ -100,6 +100,8 @@ data class CityItem(
                         imageData = this.body?.bytes()
                     } else
                         lAttemptNumber++
+
+                    close()
                 }
             } catch(thr: Throwable) {
                 lAttemptNumber++
@@ -147,6 +149,8 @@ data class CityItem(
                                             radarImageData = this.body?.bytes()
                                         } else
                                             locAttemptNumber++
+
+                                        close()
                                     }
                                 } catch(thr: Throwable) {
                                     locAttemptNumber++
@@ -155,6 +159,8 @@ data class CityItem(
                         }
                     } else
                         lAttemptNumber++
+
+                    close()
                 }
             } catch(thr: Throwable) {
                 lAttemptNumber++
