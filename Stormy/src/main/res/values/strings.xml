@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Stormy</string>
+    <string name="updating_info">Updating info</string>
+    <string name="city_image">City image</string>
+    <string name="something_went_wrong_maybe_internet_connection_lost">Something went wrong, maybe internet connection lost</string>
+    <string name="radar_image">Radar image</string>
+    <string name="no_radar_image_for_this_city">No radar image for this city</string>
+    <string name="loading_radar_image">Loading radar image</string>
+    <string name="time">Time</string>
+    <string name="temp">Temp</string>
+    <string name="rain">Rain?</string>
+    <string name="wind">Wind\n(mph)</string>
+    <string name="humidity">Humi\ndity</string>
+    <string-array name="week_days">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+</resources>

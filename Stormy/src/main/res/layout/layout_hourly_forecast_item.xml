@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp">
+
+    <ImageView
+        android:id="@+id/layout_hourly_forecast_item_weather_type_icon_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_weather_active_ic_heavy_rain_active_light" />
+
+    <TextView
+        android:id="@+id/layout_hourly_forecast_item_time_text_view"
+        style="@style/StyleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layout_hourly_forecast_item_weather_type_icon_image_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="12PM" />
+
+    <TextView
+        android:id="@+id/layout_hourly_forecast_item_temperature_text_view"
+        style="@style/StyleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layout_hourly_forecast_item_time_text_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="72" />
+
+    <TextView
+        android:id="@+id/layout_hourly_forecast_item_precipitation_text_view"
+        style="@style/StyleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layout_hourly_forecast_item_temperature_text_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10%" />
+
+    <TextView
+        android:id="@+id/layout_hourly_forecast_item_wind_text_view"
+        style="@style/StyleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layout_hourly_forecast_item_precipitation_text_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2.2" />
+
+    <TextView
+        android:id="@+id/layout_hourly_forecast_item_humidity_text_view"
+        style="@style/StyleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layout_hourly_forecast_item_wind_text_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="60%" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

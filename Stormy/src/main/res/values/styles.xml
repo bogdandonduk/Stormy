@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="StyleRecyclerView">
+<!--        <item name="layout_behavior">@string/appbar_scrolling_view_behavior</item>-->
+        <item name="android:overScrollMode">never</item>
+        <item name="android:splitMotionEvents">false</item>
+    </style>
+
+    <style name="StyleText">
+        <item name="android:textColor">@color/light</item>
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="light">#fafafa</color>
+    <color name="dark">#657f9d</color>
+    <color name="transparent_dark">#88657f9d</color>
+    <color name="transparent_feeble_dark">#33657f9d</color>
+    <color name="transparent_light">#88fafafa</color>
+</resources>

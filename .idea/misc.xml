@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="Stormy/src/main/res/drawable/bg_forecast_pane.xml" value="0.3148148148148148" />
+        <entry key="Stormy/src/main/res/drawable/bg_window.xml" value="0.27447916666666666" />
+        <entry key="Stormy/src/main/res/drawable/fragment_gallery.xml" value="0.27239583333333334" />
+        <entry key="Stormy/src/main/res/drawable/ic_back_arrow.xml" value="0.33425925925925926" />
+        <entry key="Stormy/src/main/res/drawable/ic_radar.xml" value="0.33425925925925926" />
+        <entry key="Stormy/src/main/res/drawable/ic_rainfall.xml" value="0.33425925925925926" />
+        <entry key="Stormy/src/main/res/drawable/ic_search.xml" value="0.33425925925925926" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_cloudy_active.xml" value="0.27239583333333334" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_cloudy_active_light.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_heavy_rain_active.xml" value="0.3148148148148148" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_heavy_rain_active_light.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_light_rain_active.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_light_rain_active_light.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_partly_cloudy_active.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_partly_cloudy_active_light.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_snow_sleet_active.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_snow_sleet_active_light.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_sunny_active.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/ic_weather_active_ic_sunny_active_light.xml" value="0.31203703703703706" />
+        <entry key="Stormy/src/main/res/drawable/img_placeholder_dallas.xml" value="0.32314814814814813" />
+        <entry key="Stormy/src/main/res/drawable/window_splash_background.xml" value="0.27239583333333334" />
+        <entry key="Stormy/src/main/res/layout/activity_city_picker.xml" value="0.19739583333333333" />
+        <entry key="Stormy/src/main/res/layout/activity_home.xml" value="0.7268232385661311" />
+        <entry key="Stormy/src/main/res/layout/activity_locality_picker.xml" value="0.35520833333333335" />
+        <entry key="Stormy/src/main/res/layout/activity_radar_image.xml" value="0.2921195652173913" />
+        <entry key="Stormy/src/main/res/layout/fragment_gallery.xml" value="0.25625" />
+        <entry key="Stormy/src/main/res/layout/layout_city_picker_item.xml" value="0.1" />
+        <entry key="Stormy/src/main/res/layout/layout_daily_forecast_item.xml" value="0.75" />
+        <entry key="Stormy/src/main/res/layout/layout_hourly_forecast_item.xml" value="0.5" />
+        <entry key="Stormy/src/main/res/menu/menu_app_bar_activity_home.xml" value="0.33958333333333335" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
