@@ -170,7 +170,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                         }
                     } else {
                         if(isFromServer)
-                            Toast.makeText(this, R.string.something_went_wrong_maybe_internet_connection_lost, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(Stormy.globalContext, R.string.something_went_wrong_maybe_internet_connection_lost, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
