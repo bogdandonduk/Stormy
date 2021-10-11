@@ -82,12 +82,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
 
                 true
             };
-
         {
             AppBarToolbox.getOptionsMenuItemAsView(radarOptionsMenuItemId, viewBinding.activityHomeToolbar)?.setOnLongClickListener {
                 CommonToolbox.vibrateOneShot(this@HomeActivity)
 
                 configureRadarImageTooltip(this@HomeActivity).show(this@HomeActivity, it)
+
 
                 true
             }
