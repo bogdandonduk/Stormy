@@ -34,7 +34,7 @@ class HomeActivityTest {
     }
 
     @Test
-    fun indefiniteProgressBarDisplayedWhileWaitingForFetchedWeatherContent() {
+    fun indefiniteProgressBarDisplayedWhileFetchingWeatherInfo() {
         DirectViewMatcher(activityRule.activity.viewBinding.activityHomeFetchingProgressBarContainerLinearLayout).let { matcher ->
             onView(matcher).apply {
                 matcher.matching = { candidate, _ ->
@@ -42,5 +42,10 @@ class HomeActivityTest {
                 }
             }.check(matches(matcher))
         }
+    }
+
+    @Test
+    fun updateFabClickFetchesNewWeatherInfo() {
+        TestToolbox.performViewClick(activityRule.activity.viewBinding.activityHomeRefreshFloatingActionButton)
     }
 }

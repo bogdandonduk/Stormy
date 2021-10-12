@@ -77,7 +77,7 @@ data class CityItem(
         val imagesObject = JSONObject(rawDataText).getJSONObject("city").getJSONObject("imageURLs").getJSONObject("androidImageURLs")
 
         val url = imagesObject.getString(
-            when(Stormy.globalContext.resources.displayMetrics.density) {
+            when(Stormy.instance.resources.displayMetrics.density) {
                 DisplayMetrics.DENSITY_XHIGH.toFloat(), DisplayMetrics.DENSITY_XXHIGH.toFloat(), DisplayMetrics.DENSITY_XXXHIGH.toFloat() -> "xhdpiImageURL"
                 DisplayMetrics.DENSITY_MEDIUM.toFloat(), DisplayMetrics.DENSITY_LOW.toFloat() -> "mdpiImageURL"
 
@@ -128,7 +128,7 @@ data class CityItem(
                             val imagesObject = JSONObject(this).getJSONObject("androidImageURLs")
 
                             val url = imagesObject.getString(
-                                when(Stormy.globalContext.resources.displayMetrics.density) {
+                                when(Stormy.instance.resources.displayMetrics.density) {
                                     DisplayMetrics.DENSITY_XHIGH.toFloat(), DisplayMetrics.DENSITY_XXHIGH.toFloat(), DisplayMetrics.DENSITY_XXXHIGH.toFloat() -> "xhdpiImageURL"
                                     DisplayMetrics.DENSITY_MEDIUM.toFloat(), DisplayMetrics.DENSITY_LOW.toFloat() -> "mdpiImageURL"
 

@@ -40,6 +40,14 @@ interface RepoHandler<ItemType : CoreItem> {
 
     fun getLastSelectedDayIndex(context: Context) = cityRepo.preferencesManager.getLastSelectedDayIndex(context)
 
+    fun setLastSelectedDayIndex(context: Context, dayIndex: Int) {
+        cityRepo.preferencesManager.setLastSelectedDayIndex(context, dayIndex)
+    }
+
+    fun getLastCityId(context: Context) = cityRepo.preferencesManager.getLastItemId(context)
+
+    fun setLastCityId(context: Context, cityIntrinsicId: Long) = cityRepo.preferencesManager.setLastItemId(context, cityIntrinsicId)
+
     fun search(query: String, switchToMainThread: Boolean = true, receiver: (List<ItemType>?) -> Unit) {
         if(searchJob != null && searchJob!!.isActive) {
             searchJob?.cancel("Previous similar irrelevant job cancelled")

@@ -1,5 +1,6 @@
 package proto.android.stormy.citypicker
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
@@ -9,6 +10,7 @@ import bogdandonduk.tooltiptoolboxlib.TooltipToolbox
 import com.r0adkll.slidr.Slidr
 import proto.android.stormy.R
 import proto.android.stormy.core.base.BaseActivity
+import proto.android.stormy.core.base.BaseRecyclerViewAdapter
 import proto.android.stormy.core.extensions.configureGoBackTooltip
 import proto.android.stormy.databinding.ActivityCityPickerBinding
 import top.defaults.drawabletoolbox.DrawableBuilder
@@ -65,7 +67,13 @@ class CityPickerActivity : BaseActivity<ActivityCityPickerBinding, CityPickerAct
 
                 if(it != null) {
                     if(it.isNotEmpty())
-                        viewBinding.activityCityPickerSearchResultListRecyclerView.adapter = CityPickerAdapter(it, this@CityPickerActivity)
+                        viewBinding.activityCityPickerSearchResultListRecyclerView.adapter = CityPickerAdapter(this@CityPickerActivity, it, object : BaseRecyclerViewAdapter.BaseHelper {
+                            override fun onItemClicked(context: Context, id: Long) {
+                                setLastCityId(context, id)
+
+                                finish()
+                            }
+                        })
                     else
                         viewBinding.activityCityPickerResultHintTextView.run {
                             visibility = View.VISIBLE

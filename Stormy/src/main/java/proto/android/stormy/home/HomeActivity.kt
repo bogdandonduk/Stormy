@@ -2,9 +2,7 @@ package proto.android.stormy.home
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,10 +22,13 @@ import proto.android.stormy.R
 import proto.android.stormy.Stormy
 import proto.android.stormy.citypicker.CityPickerActivity
 import proto.android.stormy.core.base.BaseActivity
+import proto.android.stormy.core.base.BaseRecyclerViewAdapter
 import proto.android.stormy.core.extensions.configureTooltipBuilder
 import proto.android.stormy.core.extensions.getDayOfWeekIndex
 import proto.android.stormy.core.model.CityRepo
 import proto.android.stormy.databinding.ActivityHomeBinding
+import proto.android.stormy.home.dailyforecast.DailyForecastAdapter
+import proto.android.stormy.home.hourlyforecast.HourlyForecastAdapter
 import proto.android.stormy.radar.RadarImageActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -133,21 +134,37 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                         viewBinding.activityHomeFetchingProgressBarContainerLinearLayout.visibility = View.GONE
 
                     if(this != null) {
-                        viewBinding.activityHomeCityNameCountryTextView.text = "$name, $countryCode"
+                        viewBinding.activityHomeCityNameCountryTextView.text = getString(R.string.city_name_country_placeholder, name, countryCode)
 
                         val timestamp = getLatestTimestamp(this@HomeActivity)
 
                         viewBinding.activityHomeTimestampTextView.text = CommonToolbox.getDateTime(timestamp / 1000)
 
                         getInitializedWeather()?.run {
-                            viewBinding.activityHomeCurrentTemperatureTextView.text = "${days[CommonToolbox.getDayOfWeekIndex(timestamp)].hours[SimpleDateFormat(" HH ", Locale.getDefault()).format(Date(timestamp)).trim().toInt()].temperature}°"
+                            viewBinding.activityHomeCurrentTemperatureTextView.text = getString(R.string.temperature_placeholder, days[CommonToolbox.getDayOfWeekIndex(timestamp)].hours[SimpleDateFormat(" HH ", Locale.getDefault()).format(Date(timestamp)).trim().toInt()].temperature.toString())
 
                             viewBinding.activityHomeDailyForecastRecyclerView.run {
                                 if(layoutManager == null)
                                     layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
 
                                 adapter = null
-                                adapter = DailyForecastAdapter(days, this@HomeActivity)
+                                adapter = DailyForecastAdapter(this@HomeActivity, days, object : DailyForecastAdapter.Helper {
+                                    override fun getSelectedDayIndex(context: Context) = getLastSelectedDayIndex(context)
+
+                                    override fun onItemClicked(
+                                        context: Context,
+                                        id: Long
+                                    ) {
+                                        setLastSelectedDayIndex(context, id.toInt())
+
+                                        adapter?.run {
+                                            for(i in 0 until itemCount)
+                                                notifyItemChanged(i)
+                                        }
+
+                                        loadHourlyForecast()
+                                    }
+                                })
                             }
 
                             loadHourlyForecast()
@@ -158,7 +175,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                                 cacheCity(this@cityItem)
 
                                 withContext(Main) {
-                                    Glide.with(Stormy.globalContext)
+                                    Glide.with(Stormy.instance)
                                         .load(this@imageData)
                                         .into(viewBinding.activityHomeCityBigImageImageView)
                                 }
@@ -170,7 +187,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                         }
                     } else {
                         if(isFromServer)
-                            Toast.makeText(Stormy.globalContext, R.string.something_went_wrong_maybe_internet_connection_lost, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(Stormy.instance, R.string.something_went_wrong_maybe_internet_connection_lost, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -178,10 +195,16 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
     }
 
     fun loadHourlyForecast(dayIndex: Int = getInitializedViewModel(this, viewModelStore).getLastSelectedDayIndex(this)) {
-        getInitializedViewModel(this, viewModelStore).lastCity?.weather?.days?.run {
-            viewBinding.activityHomeHourlyForecastRecyclerView.adapter = HourlyForecastAdapter(this[dayIndex].hours, this@HomeActivity)
+        getInitializedViewModel(this, viewModelStore).run {
+            lastCity?.weather?.days?.run days@ {
+                viewBinding.activityHomeHourlyForecastRecyclerView.run {
+                    adapter = HourlyForecastAdapter(this@HomeActivity, this@days[dayIndex].hours, object : BaseRecyclerViewAdapter.BaseHelper {
+                        override fun onItemClicked(context: Context, id: Long) {  }
+                    })
+                }
 
-            viewBinding.activityHomeHourlyForecastRecyclerView.layoutManager?.onRestoreInstanceState(getInitializedViewModel(this@HomeActivity, viewModelStore).hourlyForecastListState)
+                viewBinding.activityHomeHourlyForecastRecyclerView.layoutManager?.onRestoreInstanceState(getInitializedViewModel(this@HomeActivity, viewModelStore).hourlyForecastListState)
+            }
         }
     }
 
@@ -203,7 +226,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
         TooltipToolbox.dismissTooltip(getInitializedViewModel(this, viewModelStore).updateTooltipBuilder.getKey())
     }
 
-    fun configureSearchTooltip(context: Context) =
+    private fun configureSearchTooltip(context: Context) =
         TooltipToolbox.configureTooltipBuilder(context, getInitializedViewModel(this, viewModelStore).searchTooltipBuilder)
             .setText {
                 getString(R.string.search_city)
@@ -212,7 +235,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                 CommonToolbox.openActivity(this, CityPickerActivity::class.java)
             }
 
-    fun configureRadarImageTooltip(context: Context) =
+    private fun configureRadarImageTooltip(context: Context) =
         TooltipToolbox.configureTooltipBuilder(context, getInitializedViewModel(this, viewModelStore).radarImageTooltipBuilder)
             .setText {
                 getString(R.string.city_radar_image)
@@ -221,7 +244,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                 CommonToolbox.openActivity(this, RadarImageActivity::class.java)
             }
 
-    fun configureUpdateImageTooltip(context: Context) =
+    private fun configureUpdateImageTooltip(context: Context) =
         TooltipToolbox.configureTooltipBuilder(context, getInitializedViewModel(this, viewModelStore).updateTooltipBuilder)
             .setText {
                 getString(R.string.update)

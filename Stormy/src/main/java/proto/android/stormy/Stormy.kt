@@ -7,12 +7,12 @@ import android.content.Context
 class Stormy : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
-        lateinit var globalContext: Context
+        lateinit var instance: Stormy
     }
 
     override fun onCreate() {
         super.onCreate()
 
-        globalContext = applicationContext
+         instance = this
     }
 }

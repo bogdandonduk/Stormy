@@ -18,6 +18,9 @@
     <string name="go_back">Go back</string>
     <string name="city_radar_image">City radar image</string>
     <string name="update">Update</string>
+    <string name="city_name_country_placeholder">%1$s, %2$s</string>
+    <string name="temperature_placeholder">%1$s°</string>
+    <string name="percentage_placeholder">%1$s°</string>
 
     <string-array name="week_days">
         <item>Mon</item>

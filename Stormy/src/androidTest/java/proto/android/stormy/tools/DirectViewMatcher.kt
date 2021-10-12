@@ -9,8 +9,5 @@ class DirectViewMatcher<T : View>(var view: T, var name: String? = null, var mat
         description?.appendText("not the target view")
     }
 
-    override fun matchesSafely(item: T) : Boolean {
-        return if(matching == null) item == view else item == view && matching!!.invoke(item, view)
-
-    }
+    override fun matchesSafely(item: T) = if(matching == null) item == view else item == view && matching!!.invoke(item, view)
 }
