@@ -17,9 +17,13 @@ import proto.android.stormy.core.model.item.weather.Weather
 
 @Entity(tableName = CityDatabase.Utils.TABLE_CITIES_NAME)
 data class CityItem(
+//    @SerializedName("geonameid")
     override var intrinsicId: Long,
 
+//    @SerializedName("name")
     override var name: String,
+
+//    @SerializedName("country code")
     override var countryCode: String,
 
     override var rawDataText: String,

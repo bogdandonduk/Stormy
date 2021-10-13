@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_home_content_container_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -126,6 +127,7 @@
             android:layout_marginBottom="20dp"
             android:backgroundTint="@android:color/holo_blue_bright"
             android:clickable="true"
+            android:contentDescription="@string/update"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_baseline_refresh_24" />

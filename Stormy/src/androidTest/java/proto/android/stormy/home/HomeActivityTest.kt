@@ -46,6 +46,12 @@ class HomeActivityTest {
 
     @Test
     fun updateFabClickFetchesNewWeatherInfo() {
-        TestToolbox.performViewClick(activityRule.activity.viewBinding.activityHomeRefreshFloatingActionButton)
+        activityRule.activity.viewBinding.run {
+            root.scrollBy(0, 400)
+
+            TestToolbox.performViewClick(activityHomeRefreshFloatingActionButton)
+        }
+
+        indefiniteProgressBarDisplayedWhileFetchingWeatherInfo()
     }
 }
