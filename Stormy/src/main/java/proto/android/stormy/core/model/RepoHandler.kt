@@ -4,6 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import proto.android.stormy.core.model.item.CoreItem
+import proto.android.stormy.core.model.item.weather.Weather
 
 interface RepoHandler<ItemType : CoreItem> {
     var coroutineScope: CoroutineScope
@@ -15,9 +16,16 @@ interface RepoHandler<ItemType : CoreItem> {
     
     fun isLastCityIntrinsicIdChanged(context: Context) = cityRepo.preferencesManager.getLastItemId(context) != lastCity?.intrinsicId
 
-    fun loadLastCity(context: Context, switchToMainThread: Boolean = true, receiver: (ItemType?, CityRepo.Source) -> Unit) {
+    fun loadLastCity(
+        context: Context,
+        switchToMainThread: Boolean = true,
+        receiver: (ItemType?, CityRepo.Source) -> Unit,
+        weatherReceiver: (item: ItemType, source: CityRepo.Source) -> Unit = { _, _ -> },
+        imageDataReceiver: (item: ItemType, source: CityRepo.Source) -> Unit = { _, _ -> },
+        radarImageDataReceiver: (item: ItemType, source: CityRepo.Source) -> Unit = { _, _ -> }
+    ) {
         coroutineScope.launch(IO) {
-            cityRepo.load(context) { item: ItemType?, source: CityRepo.Source ->
+            cityRepo.load(context, receiver = { item: ItemType?, source: CityRepo.Source ->
                 lastCity = item
 
                 if(switchToMainThread)
@@ -26,7 +34,28 @@ interface RepoHandler<ItemType : CoreItem> {
                     }
                 else
                     receiver(item, source)
-            }
+            }, weatherReceiver = { item: ItemType, source: CityRepo.Source ->
+                if(switchToMainThread)
+                    withContext(Dispatchers.Main) {
+                        weatherReceiver(item, source)
+                    }
+                else
+                    weatherReceiver(item, source)
+            }, imageDataReceiver = { item: ItemType, source: CityRepo.Source ->
+                if(switchToMainThread)
+                    withContext(Dispatchers.Main) {
+                        imageDataReceiver(item, source)
+                    }
+                else
+                    imageDataReceiver(item, source)
+            }, radarImageDataReceiver = { item: ItemType, source: CityRepo.Source ->
+                if(switchToMainThread)
+                    withContext(Dispatchers.Main) {
+                        radarImageDataReceiver(item, source)
+                    }
+                else
+                    radarImageDataReceiver(item, source)
+            })
         }
     }
 
@@ -56,7 +85,6 @@ interface RepoHandler<ItemType : CoreItem> {
         }
 
         searchJob = coroutineScope.launch(IO) {
-
             val items = cityRepo.fetcher.search(query)
 
             if(switchToMainThread)

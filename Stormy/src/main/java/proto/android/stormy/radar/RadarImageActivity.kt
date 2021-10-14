@@ -14,13 +14,12 @@ import bogdandonduk.tooltiptoolboxlib.TooltipToolbox
 import com.bumptech.glide.Glide
 import com.r0adkll.slidr.Slidr
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import proto.android.stormy.R
 import proto.android.stormy.core.base.BaseActivity
 import proto.android.stormy.core.extensions.configureGoBackTooltip
 import proto.android.stormy.core.model.CityRepo
+import proto.android.stormy.core.model.item.city.CityItem
 import proto.android.stormy.databinding.ActivityRadarImageBinding
 
 class RadarImageActivity : BaseActivity<ActivityRadarImageBinding, RadarImageActivityViewModel>(
@@ -78,7 +77,7 @@ class RadarImageActivity : BaseActivity<ActivityRadarImageBinding, RadarImageAct
             viewBinding.activityRadarImageNoImageHintTextView.visibility = View.GONE
             viewBinding.activityRadarImageLoadingProgressBarContainerConstraintLayout.visibility = if(forceShowIndicators || isLastCityIntrinsicIdChanged(this@RadarImageActivity)) View.VISIBLE else View.GONE
 
-            loadLastCity(this@RadarImageActivity) { cityItem, source ->
+            loadLastCity(this@RadarImageActivity, receiver = { cityItem, source ->
                 cityItem.run cityItem@ {
                     val isFromServer = source.name == CityRepo.Source.SERVER.name
 
@@ -94,26 +93,20 @@ class RadarImageActivity : BaseActivity<ActivityRadarImageBinding, RadarImageAct
                             }
 
                         viewModelScope.launch(IO) {
-                            fetchInitializeRadarImageData().run imageData@ {
-                                if(this != null) {
-                                    cacheCity(this@cityItem)
 
-                                    withContext(Main) {
-                                        Glide.with(this@RadarImageActivity)
-                                            .asGif()
-                                            .load(this@imageData)
-                                            .into(viewBinding.activityRadarImageRadarImageImageView)
-                                    }
-                                } else
-                                    withContext(Main) {
-                                        viewBinding.activityRadarImageNoImageHintTextView.visibility = View.VISIBLE
-                                    }
-                            }
                         }
                     } else
                         viewBinding.activityRadarImageNoImageHintTextView.visibility = View.VISIBLE
                 }
-            }
+            }, radarImageDataReceiver = { cityItem: CityItem, source: CityRepo.Source ->
+                if(cityItem.radarImageData != null)
+                    Glide.with(this@RadarImageActivity)
+                        .asGif()
+                        .load(cityItem.radarImageData)
+                        .into(viewBinding.activityRadarImageRadarImageImageView)
+                else
+                    viewBinding.activityRadarImageNoImageHintTextView.visibility = View.VISIBLE
+            })
         }
     }
 

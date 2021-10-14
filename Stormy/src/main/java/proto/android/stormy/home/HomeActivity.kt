@@ -26,6 +26,7 @@ import proto.android.stormy.core.base.BaseRecyclerViewAdapter
 import proto.android.stormy.core.extensions.configureTooltipBuilder
 import proto.android.stormy.core.extensions.getDayOfWeekIndex
 import proto.android.stormy.core.model.CityRepo
+import proto.android.stormy.core.model.item.city.CityItem
 import proto.android.stormy.databinding.ActivityHomeBinding
 import proto.android.stormy.home.dailyforecast.DailyForecastAdapter
 import proto.android.stormy.home.hourlyforecast.HourlyForecastAdapter
@@ -126,7 +127,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
         getInitializedViewModel(this, viewModelStore).run {
             viewBinding.activityHomeFetchingProgressBarContainerLinearLayout.visibility = if(forceShowIndicators || isLastCityIntrinsicIdChanged(this@HomeActivity)) View.VISIBLE else View.GONE
 
-            loadLastCity(this@HomeActivity) { cityItem, source ->
+            loadLastCity(this@HomeActivity, receiver = { cityItem, source ->
                 cityItem.run cityItem@ {
                     val isFromServer = source.name == CityRepo.Source.SERVER.name
 
@@ -136,61 +137,47 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                     if(this != null) {
                         viewBinding.activityHomeCityNameCountryTextView.text = getString(R.string.city_name_country_placeholder, name, countryCode)
 
-                        val timestamp = getLatestTimestamp(this@HomeActivity)
-
-                        viewBinding.activityHomeTimestampTextView.text = CommonToolbox.getDateTime(timestamp / 1000)
-
-                        getInitializedWeather()?.run {
-                            viewBinding.activityHomeCurrentTemperatureTextView.text = getString(R.string.temperature_placeholder, days[CommonToolbox.getDayOfWeekIndex(timestamp)].hours[SimpleDateFormat(" HH ", Locale.getDefault()).format(Date(timestamp)).trim().toInt()].temperature.toString())
-
-                            viewBinding.activityHomeDailyForecastRecyclerView.run {
-                                if(layoutManager == null)
-                                    layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
-
-                                adapter = null
-                                adapter = DailyForecastAdapter(this@HomeActivity, days, object : DailyForecastAdapter.Helper {
-                                    override fun getSelectedDayIndex(context: Context) = getLastSelectedDayIndex(context)
-
-                                    override fun onItemClicked(
-                                        context: Context,
-                                        id: Long
-                                    ) {
-                                        setLastSelectedDayIndex(context, id.toInt())
-
-                                        adapter?.run {
-                                            for(i in 0 until itemCount)
-                                                notifyItemChanged(i)
-                                        }
-
-                                        loadHourlyForecast()
-                                    }
-                                })
-                            }
-
-                            loadHourlyForecast()
-                        }
-
-                        viewModelScope.launch(IO) {
-                            fetchInitializeImageData()?.run imageData@ {
-                                cacheCity(this@cityItem)
-
-                                withContext(Main) {
-                                    Glide.with(Stormy.instance)
-                                        .load(this@imageData)
-                                        .into(viewBinding.activityHomeCityBigImageImageView)
-                                }
-                            }
-
-                            fetchInitializeRadarImageData()?.run {
-                                cacheCity(this@cityItem)
-                            }
-                        }
+                        viewBinding.activityHomeTimestampTextView.text = CommonToolbox.getDateTime(getLatestTimestamp(this@HomeActivity) / 1000)
                     } else {
                         if(isFromServer)
                             Toast.makeText(Stormy.instance, R.string.something_went_wrong_maybe_internet_connection_lost, Toast.LENGTH_SHORT).show()
                     }
                 }
-            }
+            }, weatherReceiver = { cityItem: CityItem, _ ->
+                val timestamp = getLatestTimestamp(this@HomeActivity)
+
+                viewBinding.activityHomeCurrentTemperatureTextView.text = getString(R.string.temperature_placeholder, cityItem.weather!!.days[CommonToolbox.getDayOfWeekIndex(timestamp)].hours[SimpleDateFormat(" HH ", Locale.getDefault()).format(Date(timestamp)).trim().toInt()].temperature.toString())
+
+                viewBinding.activityHomeDailyForecastRecyclerView.run {
+                    if(layoutManager == null)
+                        layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
+
+                    adapter = null
+                    adapter = DailyForecastAdapter(this@HomeActivity, cityItem.weather!!.days, object : DailyForecastAdapter.Helper {
+                        override fun getSelectedDayIndex(context: Context) = getLastSelectedDayIndex(context)
+
+                        override fun onItemClicked(
+                            context: Context,
+                            id: Long
+                        ) {
+                            setLastSelectedDayIndex(context, id.toInt())
+
+                            adapter?.run {
+                                for(i in 0 until itemCount)
+                                    notifyItemChanged(i)
+                            }
+
+                            loadHourlyForecast()
+                        }
+                    })
+                }
+
+                loadHourlyForecast()
+            }, imageDataReceiver = { cityItem: CityItem, _ ->
+                Glide.with(Stormy.instance)
+                    .load(cityItem.imageData)
+                    .into(viewBinding.activityHomeCityBigImageImageView)
+            }, radarImageDataReceiver = { _, _ -> })
         }
     }
 
