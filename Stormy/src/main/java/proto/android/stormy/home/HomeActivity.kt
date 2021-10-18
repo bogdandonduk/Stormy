@@ -102,6 +102,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>({ 
                 invoke()
             }
         }
+
+        loadContent()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

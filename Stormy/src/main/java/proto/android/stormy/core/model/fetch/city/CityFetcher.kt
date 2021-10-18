@@ -14,6 +14,7 @@ import proto.android.stormy.core.model.item.weather.Weather
 class CityFetcher(
     override var reattemptStrategy: Fetcher.RequestReattemptStrategy = Fetcher.RequestReattemptStrategy.PREFERRED,
 ) : Fetcher<CityItem> {
+    // Bare-bones OkHttp and JSON parsing were indeed simpler and more preferable for me in this use case than Retrofit
     var okHttpClient = OkHttpClient()
 
     override suspend fun fetchSpecific(intrinsicId: Long): CityItem? {

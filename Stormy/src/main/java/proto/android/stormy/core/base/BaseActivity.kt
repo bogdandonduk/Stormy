@@ -35,12 +35,6 @@ abstract class BaseActivity<ViewBindingType : ViewBinding, ViewModelType : ViewM
         CommonToolbox.registerCurrentActivity(this)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        loadContent()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 

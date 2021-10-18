@@ -54,6 +54,8 @@ class CityPickerActivity : BaseActivity<ActivityCityPickerBinding, CityPickerAct
 
                 true
             }
+
+        loadContent()
     }
 
     override fun loadContent(forceShowIndicators: Boolean) {
